@@ -1,0 +1,54 @@
+x equ 0xf000
+y equ 0x0001
+z equ 0x0003 
+
+;mul x*y => [r0.r1.r2.r3] 
+mov a, #low(x) 
+mov b, #low(y) 
+mul ab 
+mov r3, a 
+mov r2, b 
+mov b, #high(x) 
+mov a, #low(y) 
+mul ab
+mov r1, b 
+addc a,r2
+mov r2,a 
+mov a,#0x00 
+addc a, r1 
+mov r1, a 
+
+mov a, #low(x) 
+mov b, #high(y)
+mul ab 
+addc a,r2
+mov r2,a
+mov r7,b
+mov a,r1
+addc a,r7
+mov r1,a
+mov a, #high(x) 
+mov b, #high(y)
+mul ab
+mov r0,b
+addc a,r1
+mov r1,a
+mov a,#0x00
+addc a,r0
+mov r0,a
+
+;sub [r0.r1.r2.r3] - z => [r4.r5.r6.r7] 
+mov a, r3 
+subb a, #low(z) 
+mov r7, a 
+mov a, r2 
+subb a, #high(z) 
+mov r6, a 
+mov a, r1 
+subb a, #0 
+mov r5, a  
+mov a, r0 
+subb a, #0 
+mov r4, a 
+
+end
